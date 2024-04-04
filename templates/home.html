@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #inputForm {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 10px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #predictionResult {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Enter Mobile Specifications</h2>
+    <form id="inputForm">
+        <label for="ram">RAM:</label>
+        <input type="text" id="ram" name="ram">
+
+        <label for="rom">ROM:</label>
+        <input type="text" id="rom" name="rom">
+
+        <label for="battery">Battery:</label>
+        <input type="text" id="battery" name="battery">
+
+        <label for="sim">SIM:</label>
+        <input type="text" id="sim" name="sim">
+
+        <label for="network">Network:</label>
+        <input type="text" id="network" name="network">
+
+        <button type="button" onclick="predictPrice()">Predict Price</button>
+    </form>
+
+    <div id="predictionResult"></div>
+
+    <script>
+        function predictPrice() {
+            var ram = document.getElementById('ram').value;
+            var rom = document.getElementById('rom').value;
+            var battery = document.getElementById('battery').value;
+            var sim = document.getElementById('sim').value;
+            var network = document.getElementById('network').value;
+
+            var data = {
+                "data": [ram, rom, battery, sim, network]
+            };
+
+            fetch('http://127.0.0.1:5000/predict_api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictionResult').innerHTML = 'Predicted Price: ' + data.prediction_amount;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
